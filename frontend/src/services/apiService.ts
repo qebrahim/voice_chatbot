@@ -201,7 +201,10 @@ export class ApiService {
       }
       return [];
     } catch (error) {
-      console.error('Get voices error:', error);
+      const isTest = (globalThis as unknown as { __TEST__?: boolean }).__TEST__ === true;
+      if (!isTest) {
+        console.error('Get voices error:', error);
+      }
       // Return empty array instead of throwing to allow fallback to browser voices
       return [];
     }

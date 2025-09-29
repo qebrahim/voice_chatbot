@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
 interface Message {
   id: string;
@@ -30,7 +30,7 @@ export class ConversationService {
     }
 
     const newConversation: Conversation = {
-      id: conversationId || uuidv4(),
+      id: conversationId || randomUUID(),
       messages: [],
       createdAt: new Date(),
       lastActivity: new Date(),
@@ -57,7 +57,7 @@ export class ConversationService {
     }
 
     const newMessage: Message = {
-      id: uuidv4(),
+      id: randomUUID(),
       ...message,
       timestamp: message.timestamp || new Date(),
     };

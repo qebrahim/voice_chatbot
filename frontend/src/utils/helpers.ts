@@ -199,10 +199,20 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
-      
-      const result = navigator.clipboard.writeText(text);
-      textArea.remove();
-      return result.then(() => true).catch(() => false);
+      // Attempt to use the deprecated execCommand as a best-effort fallback
+      let success = false;
+      try {
+        if (typeof (document as unknown as { execCommand?: (cmd: string) => boolean }).execCommand === 'function') {
+          success = (document as unknown as { execCommand: (cmd: string) => boolean }).execCommand('copy');
+        } else {
+          success = false;
+        }
+      } catch {
+        success = false;
+      } finally {
+        textArea.remove();
+      }
+      return Boolean(success);
     }
   } catch (err) {
     console.error('Failed to copy text:', err);

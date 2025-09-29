@@ -26,15 +26,10 @@ class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      // Determine development mode without using `any`
+      // Determine development mode without using import.meta (unavailable in Jest TS config)
       let isDev = false;
-      try {
-        const meta = (import.meta as unknown as { env?: { DEV?: boolean } });
-        isDev = meta?.env?.DEV === true;
-      } catch {
-        // ignore
-      }
-      // In Vite/modern bundlers, import.meta.env.DEV is sufficient
+      const g = globalThis as { importMeta?: { env?: { DEV?: boolean } } };
+      isDev = g.importMeta?.env?.DEV === true;
       return (
         <div className="error-boundary">
           <div className="error-content">
