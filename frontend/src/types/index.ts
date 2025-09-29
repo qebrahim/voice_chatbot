@@ -21,7 +21,7 @@ export interface ChatResponse {
   timestamp: string;
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data?: T;
   error?: string;
   status: number;
@@ -147,7 +147,7 @@ export interface ApiError extends Error {
   status?: number;
   code?: string;
   response?: {
-    data?: any;
+    data?: unknown;
     status: number;
     statusText: string;
   };
@@ -155,7 +155,7 @@ export interface ApiError extends Error {
 
 export interface VoiceError extends Error {
   type: 'speech-recognition' | 'text-to-speech' | 'microphone' | 'browser-support';
-  details?: any;
+  details?: unknown;
 }
 
 // ==========================================
