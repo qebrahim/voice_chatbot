@@ -7,14 +7,19 @@ export class SpeechService {
 
   constructor(private readonly elevenlabsService: ElevenlabsService) {}
 
-  async generateSpeech(text: string, options: any = {}): Promise<Buffer> {
+  async generateSpeech(
+    text: string,
+    options: Record<string, unknown> = {},
+  ): Promise<Buffer> {
     this.logger.log(`Generating speech for: ${text.substring(0, 50)}...`);
     return this.elevenlabsService.generateSpeech(text, options);
   }
 
   async transcribeAudio(
-    audioBuffer: Buffer,
+    _audioBuffer: Buffer,
   ): Promise<{ text: string; confidence: number }> {
+    // parameter is not used yet; acknowledge to satisfy lint
+    void _audioBuffer;
     this.logger.log('Transcribing audio...');
     // Implement Whisper integration here
     return { text: 'Transcription not implemented yet', confidence: 0 };

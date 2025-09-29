@@ -8,11 +8,11 @@ Object.defineProperty(window, 'speechSynthesis', {
     speak: jest.fn((utterance: any) => {
       // Simulate async speech start/end
       setTimeout(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        utterance.onstart && utterance.onstart({} as any);
+         
+        utterance.onstart?.({} as Event);
         setTimeout(() => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          utterance.onend && utterance.onend({} as any);
+           
+          utterance.onend?.({} as Event);
         }, 0);
       }, 0);
     }),
@@ -58,7 +58,7 @@ Object.defineProperty(window, 'webkitSpeechRecognition', {
 
 // Mock SpeechSynthesisUtterance constructor
 // Lightweight SpeechSynthesisUtterance mock without DOM typings
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 function MockUtterance(this: { [k: string]: unknown }, text: string) {
   this.text = text;
   this.pitch = 1;

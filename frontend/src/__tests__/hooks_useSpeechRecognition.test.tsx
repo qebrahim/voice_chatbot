@@ -32,7 +32,7 @@ describe('useSpeechRecognition', () => {
       screen.getByText('start').click();
       // trigger onstart
       if (instance && typeof instance.onstart === 'function') {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         instance.onstart({} as any);
       }
     });
@@ -40,7 +40,7 @@ describe('useSpeechRecognition', () => {
     expect(screen.getByTestId('listening').textContent).toBe('true');
 
     // Simulate an interim + final result
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const mockEvent: any = {
       resultIndex: 0,
       results: [
@@ -60,7 +60,7 @@ describe('useSpeechRecognition', () => {
     await act(async () => {
       screen.getByText('stop').click();
       if (instance && typeof instance.onend === 'function') {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         instance.onend?.({} as any);
       }
     });

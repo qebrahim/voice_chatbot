@@ -1,5 +1,3 @@
-import { ConfigService } from '@nestjs/config';
-
 // Global test setup
 beforeAll(async () => {
   // Set test environment variables

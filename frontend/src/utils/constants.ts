@@ -234,10 +234,30 @@ export const WEBSOCKET_CONFIG = {
  * Development flags
  */
 export const DEV_FLAGS = {
-  ENABLE_LOGGING: ((globalThis as any).importMeta?.env?.DEV ?? false) as boolean,
-  ENABLE_DEBUG_PANEL: ((globalThis as any).importMeta?.env?.DEV ?? false) as boolean,
-  MOCK_API_RESPONSES: (((globalThis as any).importMeta?.env?.VITE_MOCK_API ?? 'false') === 'true') as boolean,
-  ENABLE_PERFORMANCE_MONITORING: ((globalThis as any).importMeta?.env?.DEV ?? false) as boolean,
+  ENABLE_LOGGING: (() => {
+    type Env = { DEV?: boolean; VITE_MOCK_API?: string; VITE_ENABLE_ELEVENLABS?: string };
+    type G = typeof globalThis & { importMeta?: { env?: Env } };
+    const g = globalThis as G;
+    return g.importMeta?.env?.DEV ?? false;
+  })(),
+  ENABLE_DEBUG_PANEL: (() => {
+    type Env = { DEV?: boolean };
+    type G = typeof globalThis & { importMeta?: { env?: Env } };
+    const g = globalThis as G;
+    return g.importMeta?.env?.DEV ?? false;
+  })(),
+  MOCK_API_RESPONSES: (() => {
+    type Env = { VITE_MOCK_API?: string };
+    type G = typeof globalThis & { importMeta?: { env?: Env } };
+    const g = globalThis as G;
+    return (g.importMeta?.env?.VITE_MOCK_API ?? 'false') === 'true';
+  })(),
+  ENABLE_PERFORMANCE_MONITORING: (() => {
+    type Env = { DEV?: boolean };
+    type G = typeof globalThis & { importMeta?: { env?: Env } };
+    const g = globalThis as G;
+    return g.importMeta?.env?.DEV ?? false;
+  })(),
 } as const;
 
 /**
@@ -245,8 +265,8 @@ export const DEV_FLAGS = {
  */
 export const REGEX_PATTERNS = {
   EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-  URL: /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
-  PHONE: /^\+?[\d\s\-\(\)]+$/,
+  URL: /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/,
+  PHONE: /^\+?[\d\s\-()]+$/,
   ALPHANUMERIC: /^[a-zA-Z0-9]+$/,
 } as const;
 
@@ -256,7 +276,12 @@ export const REGEX_PATTERNS = {
 export const FEATURES = {
   ENABLE_SPEECH_RECOGNITION: true,
   ENABLE_TEXT_TO_SPEECH: true,
-  ENABLE_ELEVENLABS: (((globalThis as any).importMeta?.env?.VITE_ENABLE_ELEVENLABS ?? 'true') !== 'false') as boolean,
+  ENABLE_ELEVENLABS: (() => {
+    type Env = { VITE_ENABLE_ELEVENLABS?: string };
+    type G = typeof globalThis & { importMeta?: { env?: Env } };
+    const g = globalThis as G;
+    return (g.importMeta?.env?.VITE_ENABLE_ELEVENLABS ?? 'true') !== 'false';
+  })(),
   ENABLE_CONVERSATION_HISTORY: true,
   ENABLE_ANALYTICS: false,
   ENABLE_OFFLINE_MODE: false,

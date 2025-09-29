@@ -51,7 +51,7 @@ export const formatDuration = (milliseconds: number): string => {
 /**
  * Debounce function to limit how often a function can fire
  */
-export const debounce = <T extends (...args: any[]) => void>(
+export const debounce = <T extends (...args: unknown[]) => void>(
   func: T,
   wait: number
 ): ((...args: Parameters<T>) => void) => {
@@ -69,7 +69,7 @@ export const debounce = <T extends (...args: any[]) => void>(
 /**
  * Throttle function to limit execution frequency
  */
-export const throttle = <T extends (...args: any[]) => void>(
+export const throttle = <T extends (...args: unknown[]) => void>(
   func: T,
   limit: number
 ): ((...args: Parameters<T>) => void) => {
@@ -176,7 +176,7 @@ export const isValidUrl = (string: string): boolean => {
   try {
     new URL(string);
     return true;
-  } catch (_) {
+  } catch {
     return false;
   }
 };
@@ -423,7 +423,7 @@ export const storage = {
     }
   },
 
-  set: (key: string, value: any): boolean => {
+  set: (key: string, value: unknown): boolean => {
     try {
       localStorage.setItem(key, JSON.stringify(value));
       return true;

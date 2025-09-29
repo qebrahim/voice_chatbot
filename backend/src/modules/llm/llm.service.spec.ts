@@ -8,7 +8,6 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('LlmService', () => {
   let service: LlmService;
-  let configService: ConfigService;
 
   const mockConfigService = {
     get: jest.fn((key: string) => {
@@ -32,7 +31,6 @@ describe('LlmService', () => {
     }).compile();
 
     service = module.get<LlmService>(LlmService);
-    configService = module.get<ConfigService>(ConfigService);
 
     // Setup axios mock
     mockedAxios.create.mockReturnValue({
