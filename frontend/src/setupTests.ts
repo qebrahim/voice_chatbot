@@ -24,20 +24,15 @@ Object.defineProperty(window, 'speechSynthesis', {
   },
 });
 
-// Indicate test environment for modules that need to avoid side effects
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (globalThis as any).__TEST__ = true;
 
 // jsdom doesn't implement scrollIntoView; polyfill to avoid errors
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 if (!Element.prototype.scrollIntoView) {
-  // @ts-ignore
-  Element.prototype.scrollIntoView = jest.fn();
+  (Element.prototype as unknown as { scrollIntoView: (arg?: unknown) => void }).scrollIntoView = jest.fn();
 }
 
 // Mock SpeechRecognition
 Object.defineProperty(window, 'SpeechRecognition', {
-  writable: true,
   value: jest.fn(() => ({
     continuous: false,
     interimResults: false,
@@ -77,7 +72,6 @@ function MockUtterance(this: any, text: string) {
   this.onresume = null;
   this.onstart = null;
 }
-// @ts-ignore
 (globalThis as any).SpeechSynthesisUtterance = MockUtterance as any;
 
 // Mock MediaDevices

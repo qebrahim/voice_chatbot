@@ -294,7 +294,7 @@ export const apiService: ApiService = new Proxy({} as ApiService, {
     if (!apiServiceReal) {
       apiServiceReal = new ApiService();
     }
-    // @ts-ignore
+    // @ts-expect-error: dynamic property access for Proxy passthrough to ApiService instance
     return apiServiceReal[prop];
   },
 });
