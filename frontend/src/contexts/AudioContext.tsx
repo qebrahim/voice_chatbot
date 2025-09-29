@@ -1,3 +1,4 @@
+/* eslint react-refresh/only-export-components: off */
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface AudioContextType {

@@ -26,8 +26,8 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({ config, onConfigChange }) => 
     };
   }, []);
 
-  const handleConfigChange = (key: keyof VoiceConfig, value: any) => {
-    onConfigChange({ [key]: value });
+  const handleConfigChange = <K extends keyof VoiceConfig>(key: K, value: VoiceConfig[K]) => {
+    onConfigChange({ [key]: value } as Pick<VoiceConfig, K>);
   };
 
   return (

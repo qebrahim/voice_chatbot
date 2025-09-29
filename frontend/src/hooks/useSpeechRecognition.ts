@@ -91,7 +91,7 @@ export const useSpeechRecognition = (
     return () => {
       if (recognition) {
         // Some test mocks may not implement abort
-        const maybeAbort = (recognition as any).abort;
+        const maybeAbort = (recognition as unknown as { abort?: () => void }).abort;
         if (typeof maybeAbort === 'function') {
           maybeAbort.call(recognition);
         }
@@ -108,7 +108,7 @@ export const useSpeechRecognition = (
   const startListening = useCallback(() => {
     if (recognitionRef.current && !isListening) {
       resetTranscript();
-      const maybeStart = (recognitionRef.current as any).start;
+      const maybeStart = (recognitionRef.current as unknown as { start?: () => void }).start;
       if (typeof maybeStart === 'function') {
         maybeStart.call(recognitionRef.current);
       }
@@ -117,7 +117,7 @@ export const useSpeechRecognition = (
 
   const stopListening = useCallback(() => {
     if (recognitionRef.current && isListening) {
-      const maybeStop = (recognitionRef.current as any).stop;
+      const maybeStop = (recognitionRef.current as unknown as { stop?: () => void }).stop;
       if (typeof maybeStop === 'function') {
         maybeStop.call(recognitionRef.current);
       }

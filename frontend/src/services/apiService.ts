@@ -1,6 +1,12 @@
 // frontend/src/services/apiService.ts
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import { ChatResponse, ConversationHistory } from '../types';
+
+export interface VoiceInfo {
+  id?: string;
+  name?: string;
+  [k: string]: unknown;
+}
 
 interface ChatRequest {
   message: string;
@@ -30,7 +36,7 @@ interface HealthCheckResponse {
   status: string;
   timestamp: string;
   uptime: number;
-  memory: any;
+  memory: Record<string, unknown>;
   environment: string;
 }
 
@@ -38,10 +44,14 @@ export class ApiService {
   private client: AxiosInstance;
 
   constructor() {
-    const base =
-      ((globalThis as any).importMeta?.env?.VITE_API_URL as string | undefined) ??
-      ((globalThis as any).process?.env?.VITE_API_URL as string | undefined) ??
-      '/api';
+    // Resolve base URL from Vite or process envs without using `any`
+    type MaybeEnv = { VITE_API_URL?: string };
+    type MaybeGlobal = typeof globalThis & {
+      importMeta?: { env?: MaybeEnv };
+      process?: { env?: MaybeEnv };
+    };
+    const g = globalThis as MaybeGlobal;
+    const base = g.importMeta?.env?.VITE_API_URL ?? g.process?.env?.VITE_API_URL ?? '/api';
     this.client = axios.create({
       baseURL: base,
       timeout: 30000,
@@ -68,19 +78,21 @@ export class ApiService {
         console.log(`API Response: ${response.status} ${response.config.url}`);
         return response;
       },
-      (error) => {
-        console.error('API Response Error:', error.response?.data || error.message);
+      (error: AxiosError<{ message?: string }>) => {
+        const status = error.response?.status;
+        const dataMessage = error.response?.data?.message;
+        console.error('API Response Error:', dataMessage ?? error.message);
         
         // Handle specific error cases
-        if (error.response?.status === 429) {
+        if (status === 429) {
           throw new Error('Too many requests. Please try again later.');
-        } else if (error.response?.status === 401) {
+        } else if (status === 401) {
           throw new Error('Authentication failed. Please check your API keys.');
-        } else if (error.response?.status === 403) {
+        } else if (status === 403) {
           throw new Error('Access forbidden. Please check your permissions.');
-        } else if (error.response?.status === 404) {
+        } else if (status === 404) {
           throw new Error('Resource not found.');
-        } else if (error.response?.status >= 500) {
+        } else if ((status ?? 0) >= 500) {
           throw new Error('Server error. Please try again later.');
         } else if (error.code === 'ECONNABORTED') {
           throw new Error('Request timeout. Please check your connection.');
@@ -89,7 +101,7 @@ export class ApiService {
         }
         
         // Default error message
-        throw new Error(error.response?.data?.message || 'An unexpected error occurred');
+        throw new Error(dataMessage || 'An unexpected error occurred');
       }
     );
   }
@@ -141,8 +153,9 @@ export class ApiService {
 
       // Create object URL from blob response
       const audioBlob = new Blob([response.data], { type: 'audio/mpeg' });
-      const create = (URL && (URL as any).createObjectURL) ? (URL as any).createObjectURL : null;
-      const url = create ? create(audioBlob) : 'blob:mock-url';
+      const url = typeof URL !== 'undefined' && typeof URL.createObjectURL === 'function'
+        ? URL.createObjectURL(audioBlob)
+        : 'blob:mock-url';
       // In some test environments, createObjectURL may be mocked without a return
       return (url || 'blob:mock-url') as string;
     } catch (error) {
@@ -179,10 +192,14 @@ export class ApiService {
   /**
    * Get available voices for TTS
    */
-  async getAvailableVoices(): Promise<any[]> {
+  async getAvailableVoices(): Promise<VoiceInfo[]> {
     try {
-      const response = await this.client.get('/speech/voices');
-      return response.data;
+      const response = await this.client.get<unknown>('/speech/voices');
+      const data = response.data;
+      if (Array.isArray(data)) {
+        return data as VoiceInfo[];
+      }
+      return [];
     } catch (error) {
       console.error('Get voices error:', error);
       // Return empty array instead of throwing to allow fallback to browser voices

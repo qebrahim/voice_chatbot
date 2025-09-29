@@ -1,3 +1,4 @@
+/* eslint react-refresh/only-export-components: off */
 import React, { createContext, useContext} from 'react';
 import type { ReactNode } from 'react';
 import { ApiService } from '../services/apiService';
