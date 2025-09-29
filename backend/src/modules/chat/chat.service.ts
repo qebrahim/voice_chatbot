@@ -6,7 +6,8 @@ import { ChatResponseDto } from './dto/chat-response.dto';
 import { Conversation } from '../../shared/interfaces';
 
 @Injectable()
-export class ChatService {  // Make sure this line has 'export'
+export class ChatService {
+  // Make sure this line has 'export'
   private readonly logger = new Logger(ChatService.name);
 
   constructor(
@@ -14,16 +15,17 @@ export class ChatService {  // Make sure this line has 'export'
     private readonly conversationService: ConversationService,
   ) {}
 
-  async processMessage(chatMessageDto: ChatMessageDto): Promise<ChatResponseDto> {
+  async processMessage(
+    chatMessageDto: ChatMessageDto,
+  ): Promise<ChatResponseDto> {
     const { message, conversationId } = chatMessageDto;
-    
+
     this.logger.log(`Processing message: ${message.substring(0, 50)}...`);
 
     try {
       // Get or create conversation
-      const conversation = await this.conversationService.getOrCreateConversation(
-        conversationId,
-      );
+      const conversation =
+        await this.conversationService.getOrCreateConversation(conversationId);
 
       // Add user message
       await this.conversationService.addMessage(conversation.id, {
@@ -56,13 +58,18 @@ export class ChatService {  // Make sure this line has 'export'
     }
   }
 
-  async getConversationHistory(conversationId: string): Promise<Conversation | null> {
-    const conversation = await this.conversationService.getConversation(conversationId);
-    
+  async getConversationHistory(
+    conversationId: string,
+  ): Promise<Conversation | null> {
+    const conversation =
+      await this.conversationService.getConversation(conversationId);
+
     if (!conversation) {
-      throw new NotFoundException(`Conversation with ID ${conversationId} not found`);
+      throw new NotFoundException(
+        `Conversation with ID ${conversationId} not found`,
+      );
     }
-    
+
     return conversation;
   }
 }

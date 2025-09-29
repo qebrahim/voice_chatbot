@@ -56,9 +56,7 @@ describe('LlmService', () => {
           candidates: [
             {
               content: {
-                parts: [
-                  { text: 'Hello! How can I help you today?' },
-                ],
+                parts: [{ text: 'Hello! How can I help you today?' }],
               },
             },
           ],
@@ -96,7 +94,7 @@ describe('LlmService', () => {
             temperature: 0.7,
             maxOutputTokens: 1000,
           }),
-        })
+        }),
       );
     });
 
@@ -119,7 +117,9 @@ describe('LlmService', () => {
 
       const testService = module.get<LlmService>(LlmService);
 
-      await expect(testService.generateResponse('Hello')).rejects.toThrow('API Error');
+      await expect(testService.generateResponse('Hello')).rejects.toThrow(
+        'API Error',
+      );
     });
   });
 });

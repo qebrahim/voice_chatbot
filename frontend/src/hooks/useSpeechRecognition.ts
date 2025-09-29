@@ -99,6 +99,12 @@ export const useSpeechRecognition = (
     };
   }, [continuous, interimResults, language, isSupported]);
 
+  const resetTranscript = useCallback(() => {
+    setTranscript('');
+    setInterimTranscript('');
+    setFinalTranscript('');
+  }, []);
+
   const startListening = useCallback(() => {
     if (recognitionRef.current && !isListening) {
       resetTranscript();
@@ -107,7 +113,7 @@ export const useSpeechRecognition = (
         maybeStart.call(recognitionRef.current);
       }
     }
-  }, [isListening]);
+  }, [isListening, resetTranscript]);
 
   const stopListening = useCallback(() => {
     if (recognitionRef.current && isListening) {
@@ -118,11 +124,7 @@ export const useSpeechRecognition = (
     }
   }, [isListening]);
 
-  const resetTranscript = useCallback(() => {
-    setTranscript('');
-    setInterimTranscript('');
-    setFinalTranscript('');
-  }, []);
+  
 
   return {
     isListening,

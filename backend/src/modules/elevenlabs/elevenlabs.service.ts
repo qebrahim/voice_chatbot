@@ -9,7 +9,7 @@ export class ElevenlabsService {
 
   constructor(private configService: ConfigService) {
     const apiKey = this.configService.get('elevenlabs.apiKey');
-    
+
     this.client = axios.create({
       baseURL: 'https://api.elevenlabs.io/v1',
       headers: {
@@ -22,7 +22,7 @@ export class ElevenlabsService {
 
   async generateSpeech(text: string, options: any = {}): Promise<Buffer> {
     const apiKey = this.configService.get('elevenlabs.apiKey');
-    
+
     if (!apiKey) {
       this.logger.warn('ElevenLabs API key not provided, returning mock audio');
       return this.generateMockAudio(text);
@@ -59,13 +59,13 @@ export class ElevenlabsService {
       return Buffer.from(response.data);
     } catch (error) {
       this.logger.error('ElevenLabs error:', error.message);
-      
+
       if (error.response?.status === 401) {
         throw new Error('Invalid ElevenLabs API key');
       } else if (error.response?.status === 429) {
         throw new Error('ElevenLabs rate limit exceeded');
       }
-      
+
       // Fallback to mock audio
       return this.generateMockAudio(text);
     }
@@ -73,7 +73,7 @@ export class ElevenlabsService {
 
   async getVoices() {
     const apiKey = this.configService.get('elevenlabs.apiKey');
-    
+
     if (!apiKey) {
       return this.getMockVoices();
     }

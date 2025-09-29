@@ -15,9 +15,7 @@ describe('ChatController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ChatController],
-      providers: [
-        { provide: ChatService, useValue: mockChatService },
-      ],
+      providers: [{ provide: ChatService, useValue: mockChatService }],
     }).compile();
 
     controller = module.get<ChatController>(ChatController);
@@ -68,7 +66,7 @@ describe('ChatController', () => {
       );
 
       await expect(
-        controller.getConversationHistory('missing')
+        controller.getConversationHistory('missing'),
       ).rejects.toBeInstanceOf(NotFoundException);
     });
   });

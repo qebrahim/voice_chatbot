@@ -28,7 +28,9 @@ describe('ConversationService', () => {
 
     it('should return existing conversation', async () => {
       const conversation1 = await service.getOrCreateConversation();
-      const conversation2 = await service.getOrCreateConversation(conversation1.id);
+      const conversation2 = await service.getOrCreateConversation(
+        conversation1.id,
+      );
 
       expect(conversation1.id).toBe(conversation2.id);
     });
@@ -46,8 +48,10 @@ describe('ConversationService', () => {
       expect(message.id).toBeDefined();
       expect(message.role).toBe('user');
       expect(message.content).toBe('Hello');
-      
-      const updatedConversation = await service.getConversation(conversation.id);
+
+      const updatedConversation = await service.getConversation(
+        conversation.id,
+      );
       expect(updatedConversation.messages).toHaveLength(1);
     });
 
@@ -65,7 +69,7 @@ describe('ConversationService', () => {
   describe('cleanupOldConversations', () => {
     it('should cleanup old conversations', async () => {
       const conversation = await service.getOrCreateConversation();
-      
+
       // Manually set old timestamp
       const oldConversation = await service.getConversation(conversation.id);
       oldConversation.lastActivity = new Date(Date.now() - 25 * 60 * 60 * 1000); // 25 hours ago
@@ -73,7 +77,9 @@ describe('ConversationService', () => {
       const cleanedCount = service.cleanupOldConversations(24);
 
       expect(cleanedCount).toBe(1);
-      const deletedConversation = await service.getConversation(conversation.id);
+      const deletedConversation = await service.getConversation(
+        conversation.id,
+      );
       expect(deletedConversation).toBeNull();
     });
   });

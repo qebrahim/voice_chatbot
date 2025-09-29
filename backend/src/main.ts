@@ -1,11 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'; 
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
-import * as compression from 'compression';
-
+import compression from 'compression';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -15,7 +14,6 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const logger = new Logger('Bootstrap');
 
-  
   app.use(helmet());
   app.use(compression());
 
@@ -32,8 +30,7 @@ async function bootstrap() {
     }),
   );
 
-
-   app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
     .setTitle('Voice Chatbot API')
@@ -49,4 +46,4 @@ async function bootstrap() {
   logger.log(`Application is running on: http://localhost:${port}`);
   logger.log(`Swagger docs available at: http://localhost:${port}/api/docs`);
 }
-bootstrap();
+void bootstrap();

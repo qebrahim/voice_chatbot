@@ -1,13 +1,13 @@
-import { 
-  Controller, 
-  Post, 
-  Body, 
-  UseInterceptors, 
+import {
+  Controller,
+  Post,
+  Body,
+  UseInterceptors,
   UploadedFile,
   Get,
   HttpCode,
   HttpStatus,
-  Res
+  Res,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiConsumes } from '@nestjs/swagger';

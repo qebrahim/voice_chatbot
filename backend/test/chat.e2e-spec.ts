@@ -10,7 +10,9 @@ import { ConversationModule } from '../src/modules/conversation/conversation.mod
 jest.mock('../src/modules/llm/llm.service', () => {
   return {
     LlmService: jest.fn().mockImplementation(() => ({
-      generateResponse: jest.fn().mockResolvedValue('Hello, how can I help you?'),
+      generateResponse: jest
+        .fn()
+        .mockResolvedValue('Hello, how can I help you?'),
     })),
   };
 });
@@ -32,7 +34,7 @@ describe('Chat (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    
+
     app.useGlobalPipes(
       new ValidationPipe({
         transform: true,
@@ -42,7 +44,6 @@ describe('Chat (e2e)', () => {
     );
 
     await app.init();
-
   });
   afterAll(async () => {
     await app.close();
@@ -64,15 +65,12 @@ describe('Chat (e2e)', () => {
     });
 
     it('should validate message input', () => {
-      return request(app.getHttpServer())
-        .post('/chat')
-        .send({})
-        .expect(400);
+      return request(app.getHttpServer()).post('/chat').send({}).expect(400);
     });
 
     it('should reject messages that are too long', () => {
       const longMessage = 'a'.repeat(1001);
-      
+
       return request(app.getHttpServer())
         .post('/chat')
         .send({ message: longMessage })

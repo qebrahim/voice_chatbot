@@ -20,7 +20,9 @@ export class ConversationService {
   private readonly logger = new Logger(ConversationService.name);
   private readonly conversations = new Map<string, Conversation>();
 
-  async getOrCreateConversation(conversationId?: string): Promise<Conversation> {
+  async getOrCreateConversation(
+    conversationId?: string,
+  ): Promise<Conversation> {
     if (conversationId && this.conversations.has(conversationId)) {
       const conversation = this.conversations.get(conversationId);
       conversation.lastActivity = new Date();
@@ -36,7 +38,7 @@ export class ConversationService {
 
     this.conversations.set(newConversation.id, newConversation);
     this.logger.log(`Created conversation: ${newConversation.id}`);
-    
+
     return newConversation;
   }
 
@@ -44,9 +46,12 @@ export class ConversationService {
     return this.conversations.get(conversationId) || null;
   }
 
-  async addMessage(conversationId: string, message: Omit<Message, 'id'>): Promise<Message> {
+  async addMessage(
+    conversationId: string,
+    message: Omit<Message, 'id'>,
+  ): Promise<Message> {
     const conversation = this.conversations.get(conversationId);
-    
+
     if (!conversation) {
       throw new Error('Conversation not found');
     }
@@ -60,7 +65,9 @@ export class ConversationService {
     conversation.messages.push(newMessage);
     conversation.lastActivity = new Date();
 
-    this.logger.log(`Added message to conversation ${conversationId}: ${message.role}`);
+    this.logger.log(
+      `Added message to conversation ${conversationId}: ${message.role}`,
+    );
     return newMessage;
   }
 

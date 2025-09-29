@@ -45,7 +45,7 @@ describe('Chat rate limiting (e2e)', () => {
         transform: true,
         whitelist: true,
         forbidNonWhitelisted: true,
-      })
+      }),
     );
     await app.init();
   });

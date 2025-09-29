@@ -12,7 +12,9 @@ export class SpeechService {
     return this.elevenlabsService.generateSpeech(text, options);
   }
 
-  async transcribeAudio(audioBuffer: Buffer): Promise<{ text: string; confidence: number }> {
+  async transcribeAudio(
+    audioBuffer: Buffer,
+  ): Promise<{ text: string; confidence: number }> {
     this.logger.log('Transcribing audio...');
     // Implement Whisper integration here
     return { text: 'Transcription not implemented yet', confidence: 0 };
