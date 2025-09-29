@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Test, TestingModule } from '@nestjs/testing';
-import { ChatController } from './chat.controller';
+import { ChatController } from './chat.Controller';
 import { ChatService } from './chat.service';
 import { NotFoundException } from '@nestjs/common';
 
