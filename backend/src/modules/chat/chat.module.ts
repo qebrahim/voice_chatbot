@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ChatController } from './chat.controller';
+import { ChatController } from './chat.Controller';
 import { ChatService } from './chat.service';
 import { LlmModule } from '../llm/llm.module';
 import { ConversationModule } from '../conversation/conversation.module';

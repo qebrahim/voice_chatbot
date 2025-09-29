@@ -32,7 +32,7 @@ export class SpeechController {
   ) {
     const audioBuffer = await this.speechService.generateSpeech(
       textToSpeechDto.text,
-      textToSpeechDto,
+      textToSpeechDto as unknown as Record<string, unknown>,
     );
 
     res.set({
