@@ -191,7 +191,7 @@ export type AppAction =
 // Context Types
 // ==========================================
 export interface ApiContextType {
-  apiService: any; // Will be properly typed based on your ApiService class
+  apiService: unknown;
 }
 
 export interface AudioContextType {
@@ -264,7 +264,7 @@ export interface BrowserSupport {
 // ==========================================
 export interface AnalyticsEvent {
   type: 'voice_interaction' | 'error' | 'config_change' | 'conversation_start';
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   timestamp: Date;
   sessionId?: string;
 }
@@ -305,7 +305,7 @@ export interface EnvironmentConfig {
 // ==========================================
 export interface WebSocketMessage {
   type: 'transcript' | 'response' | 'error' | 'status';
-  data: any;
+  data: unknown;
   timestamp: string;
 }
 
@@ -319,21 +319,26 @@ export interface WebSocketConfig {
 // ==========================================
 // Type Guards
 // ==========================================
-export function isApiError(error: any): error is ApiError {
-  return error && typeof error.status === 'number';
+export function isApiError(error: unknown): error is ApiError {
+  if (typeof error !== 'object' || error === null) return false;
+  const e = error as Record<string, unknown>;
+  return typeof e.status === 'number' || typeof e.code === 'string' || typeof e.message === 'string';
 }
 
-export function isVoiceError(error: any): error is VoiceError {
-  return error && typeof error.type === 'string' && 
-    ['speech-recognition', 'text-to-speech', 'microphone', 'browser-support'].includes(error.type);
+export function isVoiceError(error: unknown): error is VoiceError {
+  if (typeof error !== 'object' || error === null) return false;
+  const e = error as Record<string, unknown>;
+  return typeof e.type === 'string' && 
+    ['speech-recognition', 'text-to-speech', 'microphone', 'browser-support'].includes(e.type as string);
 }
 
-export function isMessage(obj: any): obj is Message {
-  return obj && 
-    typeof obj.id === 'string' &&
-    typeof obj.text === 'string' &&
-    ['user', 'ai'].includes(obj.sender) &&
-    obj.timestamp instanceof Date;
+export function isMessage(obj: unknown): obj is Message {
+  if (typeof obj !== 'object' || obj === null) return false;
+  const m = obj as Record<string, unknown>;
+  return typeof m.id === 'string' &&
+    typeof m.text === 'string' &&
+    (m.sender === 'user' || m.sender === 'ai') &&
+    m.timestamp instanceof Date;
 }
 
 // ==========================================

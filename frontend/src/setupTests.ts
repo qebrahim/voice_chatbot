@@ -24,7 +24,9 @@ Object.defineProperty(window, 'speechSynthesis', {
   },
 });
 
-(globalThis as any).__TEST__ = true;
+// Mark test environment without using `any`
+type TestGlobalFlag = { __TEST__?: boolean };
+(globalThis as unknown as TestGlobalFlag).__TEST__ = true;
 
 // jsdom doesn't implement scrollIntoView; polyfill to avoid errors
 if (!Element.prototype.scrollIntoView) {
@@ -57,7 +59,7 @@ Object.defineProperty(window, 'webkitSpeechRecognition', {
 // Mock SpeechSynthesisUtterance constructor
 // Lightweight SpeechSynthesisUtterance mock without DOM typings
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function MockUtterance(this: any, text: string) {
+function MockUtterance(this: { [k: string]: unknown }, text: string) {
   this.text = text;
   this.pitch = 1;
   this.rate = 1;
@@ -72,7 +74,10 @@ function MockUtterance(this: any, text: string) {
   this.onresume = null;
   this.onstart = null;
 }
-(globalThis as any).SpeechSynthesisUtterance = MockUtterance as any;
+// Assign mock constructor to global without `any`
+type SpeechSynthesisUtteranceCtor = new (text: string) => unknown;
+(globalThis as unknown as { SpeechSynthesisUtterance: SpeechSynthesisUtteranceCtor }).SpeechSynthesisUtterance =
+  MockUtterance as unknown as SpeechSynthesisUtteranceCtor;
 
 // Mock MediaDevices
 Object.defineProperty(navigator, 'mediaDevices', {
